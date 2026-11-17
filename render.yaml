@@ -1,0 +1,42 @@
+# Blueprint de Render: crea el backend (FastAPI) y su base PostgreSQL.
+# Render → New → Blueprint → elegir este repositorio.
+services:
+  - type: web
+    name: sentinela-aedes-api
+    runtime: python
+    plan: free
+    region: ohio
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # Un solo proceso: el simulador de la flota IoT corre dentro del servidor.
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sentinela-aedes-db
+          property: connectionString
+      # Llave que deben presentar los nodos/gateways (X-Device-Key). Render la genera.
+      - key: DEVICE_API_KEY
+        generateValue: true
+      # Cambiar por la URL de Vercel (ej. https://sentinela-aedes.vercel.app) para cerrar CORS.
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: SIMULATOR_ENABLED
+        value: "true"
+      - key: SIMULATOR_INTERVAL
+        value: "5"
+      - key: WEATHER_ENABLED
+        value: "true"
+      # Poner en "true" para cargar casos reales de dengue de la DGE al arrancar.
+      - key: DGE_ETL_ENABLED
+        value: "false"
+
+databases:
+  - name: sentinela-aedes-db
+    plan: free
+    region: ohio
+    databaseName: sentinela
+    user: sentinela
