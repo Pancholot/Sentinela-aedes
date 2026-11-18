@@ -86,7 +86,7 @@ npm run dev                        # http://localhost:5173 (usa http://localhost
 
 Sin `DATABASE_URL` el backend usa SQLite (`backend/sentinela.db`); la primera vez siembra la base (catálogo, 400 nodos, 6 semanas de lecturas) en unos segundos.
 
-Pruebas automáticas (11 pruebas de extremo a extremo):
+Pruebas automáticas (12 pruebas de extremo a extremo):
 
 ```bash
 cd backend
