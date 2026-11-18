@@ -86,13 +86,15 @@ def test_brute_force_rule(client):
 
 
 def test_siem_ignores_spoofed_forwarded_for(client):
-    # Un atacante cambia la IP falsa en cada intento; el proxy agrega la IP real al final.
+    # El atacante cambia la IP falsa en cada intento; el borde agrega la IP real y luego
+    # los proxies internos agregan IPs privadas (forma real observada en Render).
     for i in range(6):
         client.post("/api/telemetry", json={"node_id": "OVI-0001"},
-                    headers={"X-Device-Key": "mala", "X-Forwarded-For": f"10.0.0.{i}, 203.0.113.7"})
+                    headers={"X-Device-Key": "mala", "X-Forwarded-For": f"1.2.3.{i}, 8.8.4.4, 10.29.49.105"})
     events = client.get("/api/security/events?limit=20").json()
-    assert {e["source_ip"] for e in events if e["kind"] == "auth_fail"} >= {"203.0.113.7"}
-    assert any(e["kind"] == "brute_force" and e["source_ip"] == "203.0.113.7" for e in events)
+    fails = {e["source_ip"] for e in events if e["kind"] == "auth_fail"}
+    assert "8.8.4.4" in fails and not any(ip.startswith("1.2.3.") or ip.startswith("10.") for ip in fails)
+    assert any(e["kind"] == "brute_force" and e["source_ip"] == "8.8.4.4" for e in events)
 
 
 def test_brigada_sends_erp_order(client):

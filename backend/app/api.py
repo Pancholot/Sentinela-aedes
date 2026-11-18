@@ -1,4 +1,5 @@
 """Endpoints REST de Sentinela Aedes."""
+import ipaddress
 import secrets
 from datetime import timedelta
 
@@ -36,14 +37,18 @@ def require_ready():
 def client_ip(request: Request) -> str:
     """IP del cliente para la regla SIEM.
 
-    Se usa el ÚLTIMO valor de X-Forwarded-For: lo agrega el proxy de Render con la IP
-    que realmente se conectó. Los valores anteriores los puede escribir el propio
-    cliente, así que un atacante podría falsificarlos para evadir el umbral por IP."""
+    X-Forwarded-For llega como "<lo que mandó el cliente>, <IP real>, <proxies internos>".
+    Los primeros valores los puede falsificar un atacante para evadir el umbral por IP,
+    y los últimos son IPs privadas de la red de Render. Por eso se toma la IP pública
+    más a la derecha: la que agregó el borde de Render con quien realmente se conectó."""
     fwd = request.headers.get("x-forwarded-for")
     if fwd:
-        last = [p.strip() for p in fwd.split(",") if p.strip()]
-        if last:
-            return last[-1]
+        for part in reversed([p.strip() for p in fwd.split(",") if p.strip()]):
+            try:
+                if ipaddress.ip_address(part).is_global:
+                    return part
+            except ValueError:
+                continue
     return request.client.host if request.client else "desconocida"
 
 
