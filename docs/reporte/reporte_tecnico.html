@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reporte técnico · Sentinela Aedes</title>
+<script>
+  // ======= EDITAR AQUÍ antes de generar el PDF =======
+  const DATOS = {
+    integrantes: "",   // ej. "Nombre Apellido · Nombre Apellido"
+    repo: "https://github.com/Pancholot/Sentinela-aedes",
+    api: "https://sentinela-aedes-api.onrender.com",      // URL real del servicio en Render
+    dashboard: "https://sentinela-aedes.vercel.app",      // URL real del proyecto en Vercel
+    fecha: "Noviembre de 2026",
+  };
+  // ====================================================
+</script>
+<style>
+  @page { size: Letter; margin: 0.5in 0.6in 0.55in 0.6in; }
+  :root { --ink:#17211F; --mut:#4A5A5E; --teal:#0F5C6E; --line:#D5DEDC; --soft:#F2F6F5; --red:#A3231B; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin:0; background:#fff; color:var(--ink); font-family: Inter, 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif; font-size: 9.3pt; line-height: 1.42; }
+  .page { max-width: 7.3in; margin: 0 auto; }
+  h1 { font-size: 19pt; margin: 0; letter-spacing: -0.2px; }
+  h2 { font-size: 11.6pt; color: var(--teal); margin: 13px 0 5px; padding-bottom: 3px; border-bottom: 1.5px solid var(--teal); break-after: avoid; }
+  h3 { font-size: 9.8pt; margin: 9px 0 3px; break-after: avoid; }
+  p { margin: 0 0 6px; text-align: justify; hyphens: auto; }
+  ul { margin: 2px 0 6px; padding-left: 16px; } li { margin: 1px 0; }
+  a { color: var(--teal); text-decoration: none; font-weight: 600; }
+  code, .mono { font-family: 'DejaVu Sans Mono', Consolas, monospace; font-size: 7.9pt; }
+  code { background: var(--soft); padding: 0 3px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; font-size: 8.3pt; line-height: 1.32; break-inside: avoid; }
+  th { background: var(--teal); color: #fff; text-align: left; padding: 3px 6px; font-weight: 600; }
+  td { padding: 3px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #FAFCFB; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--teal); padding-bottom: 7px; }
+  .sub { color: var(--mut); font-size: 9.6pt; margin-top: 2px; }
+  .meta { white-space: nowrap; text-align: right; color: var(--mut); font-size: 8.4pt; }
+  .links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 9px 0 4px; }
+  .links div { background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; font-size: 8pt; }
+  .links b { display: block; font-size: 7.4pt; color: var(--mut); text-transform: uppercase; letter-spacing: .5px; }
+  .links a { word-break: break-all; }
+  .flow { display: flex; align-items: stretch; gap: 0; margin: 6px 0 4px; font-size: 7.7pt; line-height: 1.25; }
+  .flow .n { flex: 1; border: 1.3px solid var(--teal); border-radius: 6px; padding: 5px 6px; background: #fff; }
+  .flow .n b { display: block; font-size: 8.2pt; margin-bottom: 1px; }
+  .flow .n.erp { border-color: var(--red); background: #FDF3F2; }
+  .flow .ar { width: 14px; display: flex; align-items: center; justify-content: center; color: var(--teal); font-weight: 700; }
+  .cap { font-size: 7.8pt; color: var(--mut); margin: 2px 0 8px; text-align: center; }
+  pre { background: #10201F; color: #DDEBE7; font-family: 'DejaVu Sans Mono', Consolas, monospace; font-size: 7.2pt; line-height: 1.38; padding: 6px 8px; border-radius: 5px; margin: 4px 0 7px; white-space: pre; overflow: hidden; break-inside: avoid; }
+  pre .k { color: #7FD1B9; } pre .w { color: #F2C14E; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .shots { display: grid; grid-template-columns: 2.55fr 1fr; gap: 10px; align-items: start; margin-top: 6px; break-inside: avoid; }
+  .shots img, .fig img { width: 100%; border: 1px solid var(--line); border-radius: 5px; display: block; }
+  .fig { break-inside: avoid; margin: 6px 0 2px; }
+  .note { border-left: 3px solid var(--teal); background: var(--soft); padding: 5px 8px; margin: 6px 0 8px; font-size: 8.5pt; }
+  .pb { break-before: page; }
+  .tag { display: inline-block; font-size: 7.2pt; font-weight: 700; padding: 0 5px; border-radius: 8px; background: #E3EFEA; color: #2E6B50; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="head">
+  <div>
+    <h1>Sentinela Aedes · Prototipo Alfa</h1>
+    <div class="sub">Reporte técnico · Desafío Data-Driven 4.0 (Unidades 3 y 4) · Alerta temprana de dengue para Yucatán</div>
+  </div>
+  <div class="meta"><span data-k="fecha"></span><br><span data-k="integrantes"></span></div>
+</div>
+
+<div class="links">
+  <div><b>Repositorio (código ejecutable)</b><a data-href="repo"></a></div>
+  <div><b>Backend en la nube · Swagger</b><a data-href="api" data-suffix="/docs"></a></div>
+  <div><b>Dashboard operativo</b><a data-href="dashboard"></a></div>
+</div>
+
+<h2>1. Resumen y arquitectura</h2>
+<p>Sentinela Aedes anticipa brotes de dengue en Mérida y los municipios de Yucatán. Combina una red de <b>400 ovitrampas IoT</b> que cuentan huevecillos del mosquito <i>Aedes aegypti</i> y miden microclima con <b>clima real</b> (Open-Meteo) y casos por semana epidemiológica. Con esos datos calcula la probabilidad de brote por colonia y municipio a 1, 2 y 4 semanas. Las decisiones que se toman en el tablero (asignar una brigada, atender un reporte ciudadano, dar mantenimiento a los nodos) se convierten en <b>documentos para el ERP de la Secretaría de Salud (SSY)</b>. Como los sensores físicos aún no existen, un simulador de flota genera la telemetría continua, y esta pasa por la misma API y las mismas validaciones que usaría un nodo real.</p>
+
+<div class="flow">
+  <div class="n"><b>Edge · ovitrampas</b>Simulador de flota (2–4 lecturas cada 5 s + conteo diario) y gateway externo <code>node_simulator.py</code></div>
+  <div class="ar">➜</div>
+  <div class="n"><b>API FastAPI · Render</b><code>POST /api/telemetry</code>, llave de dispositivo, validación, cuarentena, regla SIEM</div>
+  <div class="ar">➜</div>
+  <div class="n"><b>PostgreSQL gestionada</b>lecturas, clima, casos, cuarentena, eventos de seguridad, bitácora ERP</div>
+  <div class="ar">➜</div>
+  <div class="n"><b>Analítica</b>IPO, huevecillos/trampa, riesgo logístico explicable, pronóstico con IC 90 %</div>
+  <div class="ar">➜</div>
+  <div class="n"><b>Dashboard · Vercel</b>React responsivo, sondeo cada 10 s (4 s en operación)</div>
+  <div class="ar">➜</div>
+  <div class="n erp"><b>ERP simulado</b>documento con folio, impresión en consola, acuse y alerta</div>
+</div>
+<div class="cap">Figura 1. Flujo de datos del prototipo alfa: de la telemetría a la decisión y al documento ERP.</div>
+
+<h2>2. Backend, sistemas de soporte y nube</h2>
+<h3>2.1 Ingesta, procesamiento y persistencia</h3>
+<p><code>POST /api/telemetry</code> recibe una lectura o un lote de hasta 500 lecturas por gateway y exige el encabezado <code>X-Device-Key</code>. Cada lectura pasa por <code>telemetry.py</code>, que aplica estas reglas de calidad. Si una lectura falla, se guarda en <code>quarantined_readings</code> con su motivo y no se pierde.</p>
+<ul>
+  <li>Nodo no registrado (además genera un evento de seguridad).</li>
+  <li>Valores físicamente imposibles: temperatura fuera de 5–50 °C, humedad fuera de 0–100 %, batería fuera de 2.8–4.5 V, RSSI o conteos imposibles.</li>
+  <li>Marca de tiempo en el futuro o con más de 7 días de atraso.</li>
+  <li>Incremento de huevecillos muy por encima del histórico de 14 días del propio nodo.</li>
+</ul>
+<p>Las lecturas válidas se guardan en PostgreSQL. Cada 5 s el simulador interno envía microclima de 2 a 4 nodos, los conteos diarios a la hora programada de cada trampa y, de vez en cuando, una lectura anómala que prueba la cuarentena. Cada 6 h el backend actualiza el clima real. La analítica (<code>analytics.py</code>) calcula en el servidor los KPIs, el riesgo por área con un modelo logístico que explica qué variables pesan más, y el pronóstico estatal. El tablero lo recibe completo en una sola llamada (<code>GET /api/dashboard</code>). Hay 11 pruebas automáticas de extremo a extremo (<code>pytest</code>) que cubren ingesta, cuarentena, ERP y la regla SIEM.</p>
+
+<h3>2.2 Emulación de la integración con el ERP</h3>
+<p>No se construyó un ERP. La función <code>erp.enviar_a_erp()</code> actúa como la capa de integración: arma el documento con la estructura que espera un ERP (sociedad, centro de costos, folio, partidas de materiales con precio e importe), lo <b>imprime en la consola del servidor</b> (visible en los logs de Render), simula la latencia de red, recibe un <b>acuse</b> con número de documento ERP y guarda la transacción en <code>erp_transactions</code>. El tablero muestra una <b>alerta</b> con el folio. Para las órdenes de servicio se emula la lógica de un MRP: la cantidad de larvicida, adulticida y horas-hombre depende del nivel de riesgo y del número de viviendas de la colonia.</p>
+<table>
+  <tr><th style="width:27%">Acción en el dashboard</th><th style="width:22%">Documento ERP</th><th>Contenido y uso en la SSY</th></tr>
+  <tr><td>Asignar brigada a colonia/municipio</td><td><code>ORDEN_SERVICIO</code></td><td>Prioridad, ubicación, motivo, variables que explican el riesgo, requisición de materiales e importe; base para almacén y compras</td></tr>
+  <tr><td>Reporte ciudadano de criadero</td><td><code>AVISO_CIUDADANO</code></td><td>Folio ciudadano, colonia con precisión de 100 m (privacidad), evidencia fotográfica</td></tr>
+  <tr><td>Nodos sin datos &gt; 48 h</td><td><code>ORDEN_MANTENIMIENTO</code></td><td>Equipos afectados, kits de reposición y horas de técnico (mantenimiento de activos)</td></tr>
+  <tr><td>Sincronizar indicadores</td><td><code>REPORTE_KPI</code></td><td>Casos pronosticados a 1–4 semanas, colonias por nivel, IPO y nodos en línea, para los tableros de dirección</td></tr>
+</table>
+<pre><span class="k">[ERP-SIM] &gt;&gt;&gt; Enviando ORDEN_SERVICIO OS-2026-000001 a ERP institucional SSY (simulado) ...</span>
+[ERP-SIM]  {"sistema_origen": "SENTINELA-AEDES", "tipo_documento": "ORDEN_SERVICIO", "sociedad": "SSY-YUC",
+            "centro_costos": "SSY-VECTORES-JS1", "datos": {"prioridad": "URGENTE",
+            "ubicacion": {"nombre": "Mulsay", "municipio": "Mérida", ...},
+            "motivo": "Probabilidad de brote de dengue de 83% a 2 semana(s)",
+            "partidas": [{"material": "LARV-TEMEFOS", "cantidad": 24.0, "unidad": "KG", "importe": 4440.0},
+                         {"material": "HH-BRIGADA", "cantidad": 100.0, "unidad": "H", "importe": 12000.0}, ...]}}
+<span class="w">[ERP-SIM] &lt;&lt;&lt; Acuse RECIBIDO · documento ERP 4500000001 para OS-2026-000001</span></pre>
+
+<h3>2.3 Justificación del modelo de nube: PaaS</h3>
+<p>El núcleo (API y base de datos) se aloja en <b>Render</b> y el dashboard en <b>Vercel</b>. Ambos son <b>plataformas como servicio (PaaS)</b>. La decisión se tomó comparando el trabajo que exige cada modelo con lo que el proyecto necesita:</p>
+<table>
+  <tr><th style="width:24%">Criterio</th><th style="width:38%">IaaS (VM en AWS EC2 / Azure VM)</th><th>PaaS elegido (Render + Vercel)</th></tr>
+  <tr><td>Operación</td><td>El equipo parcha el SO, instala Python/Nginx, configura firewall y certificados</td><td>El proveedor administra SO, runtime y parches; el equipo de 2 personas se concentra en la lógica</td></tr>
+  <tr><td>Seguridad</td><td>TLS, respaldos y hardening manuales (más superficie de error)</td><td>TLS automático, base sin IP pública, respaldos gestionados, health check (<code>/api/health</code>)</td></tr>
+  <tr><td>Despliegue</td><td>Scripts propios o CI/CD a configurar</td><td>Despliegue continuo desde GitHub; infraestructura como código en <code>render.yaml</code></td></tr>
+  <tr><td>Costo del piloto</td><td>Pago por hora aunque no haya tráfico</td><td>Plan gratuito suficiente para el prototipo; escala por plan sin rediseño</td></tr>
+  <tr><td>Portabilidad</td><td>Alta</td><td>Alta: uvicorn + PostgreSQL estándar, migrable a contenedor en AWS, Azure o GCP</td></tr>
+</table>
+<p><b>Límites reconocidos.</b> En el plan gratuito el servicio se suspende tras 15 min sin tráfico y la base gratuita caduca a los 30 días. Además, la región es Ohio (EE. UU.). Para producción, los datos de salud se consideran datos personales sensibles para un sujeto obligado (LGPDPPSO), por lo que se migraría a un plan de pago en una región de nube en México (Querétaro: AWS, Azure o Google Cloud). La arquitectura queda <b>híbrida</b>: el Network Server LoRaWAN y el servidor edge permanecen en sitio o en IaaS, porque necesitan conexiones UDP/MQTT persistentes y operar aunque falle el enlace a Internet.</p>
+
+<h2>3. Ciberseguridad IT/OT y diseño SOC</h2>
+<p>La red se segmenta con el modelo Purdue (ISA/IEC 62443) y principios Zero Trust. Entre zonas la regla por defecto es deny-all y solo pasan los 13 flujos numerados. Ningún flujo va directo de IT a OT: todo termina en la <b>IDMZ</b> (relay de telemetría, gateway ERP con mTLS, colector de logs, bastión con MFA y repositorio de firmware firmado). Las conexiones desde OT se inician siempre hacia afuera, así que OT no expone puertos de entrada. Cada sitio de campo es un <b>microsegmento</b> (una VLAN por sitio).</p>
+<div class="fig"><img src="../seguridad/idmz_zero_trust.svg" alt="Diagrama de segmentación IDMZ bajo Zero Trust"></div>
+<div class="cap">Figura 2. Segmentación IDMZ con microsegmentación, control de acceso y puertos por flujo (fuente editable y tabla completa en <code>docs/seguridad/</code>).</div>
+<div class="two">
+<div>
+<h3>Controles Zero Trust</h3>
+<ul>
+  <li><b>Verificar siempre:</b> llave de dispositivo en cada petición, validación de rangos e histórico (implementado).</li>
+  <li><b>Mínimo privilegio:</b> la llave solo publica telemetría, la base solo acepta conexiones de la API y el acceso técnico es just-in-time por el bastión.</li>
+  <li><b>Asumir brecha:</b> las lecturas sospechosas van a cuarentena y los fallos de autenticación alimentan al SIEM (implementado).</li>
+  <li><b>Identidad por dispositivo:</b> el prototipo usa una llave compartida; en producción cada gateway tendría un certificado X.509 con mTLS y se podría revocar uno por uno.</li>
+</ul>
+</div>
+<div>
+<h3>Regla SIEM SA-001 · implementada en <code>telemetry.py</code></h3>
+<table>
+  <tr><th style="width:30%">Campo</th><th>Definición</th></tr>
+  <tr><td>Amenaza</td><td>Fuerza bruta de la llave (ATT&amp;CK T1110) para inyectar conteos falsos (ICS T0856)</td></tr>
+  <tr><td>Logs fuente</td><td><code>security_events</code>: <code>kind</code>, <code>source_ip</code>, <code>ts</code></td></tr>
+  <tr><td>Condición</td><td><code>kind = auth_fail</code> agrupado por <code>source_ip</code></td></tr>
+  <tr><td>Umbral</td><td>≥ 5 eventos en 60 s (1 alerta por IP/min)</td></tr>
+  <tr><td>Severidad</td><td><b style="color:var(--red)">Alta</b> (el fallo individual es media)</td></tr>
+  <tr><td>Acción</td><td>Auto: evento <code>brute_force</code>, aviso <code>[SIEM]</code> y alerta en el tablero. SOC: bloquear la IP 30 min en el WAF o rotar la llave del gateway</td></tr>
+</table>
+</div>
+</div>
+<p>La regla también está escrita en formato <b>Sigma 2.0</b> (<code>docs/seguridad/SA-001.sigma.yml</code>), así que se puede convertir a Splunk, Elastic o Wazuh sin reescribirla. En la demo se dispara en vivo con <code>node_simulator.py --ataque</code>, que envía llaves inválidas: el evento de severidad alta aparece en <code>/api/security/events</code> y en la pestaña de operación.</p>
+
+<h2>4. Dashboard operativo e informática móvil</h2>
+<p>El dashboard (React + Vite, en Vercel) tiene cuatro vistas: <b>Secretaría de Salud</b> (riesgo por colonia de Mérida), <b>Yucatán por municipio</b>, <b>vista ciudadana</b> y <b>Operación e integración</b> (telemetría en vivo, cuarentena, nodos caídos, bitácora ERP y eventos de seguridad). Los KPIs se <b>actualizan solos</b> desde el backend: el tablero consulta cada 10 s y la vista de operación cada 4 s, sin recargar la página, y el indicador «En vivo · actualizado hace N s» muestra la frescura del dato. Los KPIs son casos pronosticados contra el umbral epidémico, colonias en riesgo alto o brote, positividad de ovitrampas (IPO), nodos en línea, reportes validados y lecturas en 24 h. El diseño se reacomoda a una columna en el celular.</p>
+<div class="shots">
+  <div><img src="../img/dashboard_escritorio.png" alt="Dashboard en escritorio"></div>
+  <div><img src="../img/dashboard_movil.png" alt="Dashboard en celular"></div>
+</div>
+<div class="cap">Figura 3. El mismo tablero en escritorio (izq.) y en celular (der.), con datos en vivo del backend.</div>
+<p><b>Supervisión a distancia y toma de decisiones.</b> El jefe de la Jurisdicción no necesita estar en la oficina. Desde el celular ve que una colonia pasó a nivel «brote», revisa qué variables lo explican (huevecillos sobre su histórico, lluvia con rezago, IPO en ascenso) y pulsa <i>Asignar brigada</i>. En menos de un segundo se genera la orden de servicio con su requisición de materiales y el ERP devuelve el acuse con folio. Almacén y compras reciben el documento sin capturas manuales. El técnico de campo también ve desde su teléfono qué nodos llevan más de 48 h sin reportar y genera la orden de mantenimiento. Así se cierra el ciclo <b>dato → decisión → recurso</b>, que antes dependía de oficios y de reuniones semanales.</p>
+
+<h2>5. Retos y visión de negocio</h2>
+<h3>5.1 Barreras técnicas (sistemas legacy)</h3>
+<table>
+  <tr><th style="width:32%">Barrera</th><th>Cómo la atiende la arquitectura</th></tr>
+  <tr><td>Los casos llegan por lotes semanales del SINAVE y de los datos abiertos de la DGE (ZIP/CSV, sin API)</td><td>ETL <code>etl_dge.py</code> que descarga, filtra Yucatán y agrega por municipio y semana epidemiológica (criterio SINAVE); reemplaza los casos simulados</td></tr>
+  <tr><td>El ERP institucional no tiene API REST moderna (interfaces por archivo o SOAP, catálogos propios)</td><td>Conector desacoplado con documento canónico JSON y folio: para conectar el ERP real solo cambia el adaptador, publicado detrás del gateway ERP en la IDMZ</td></tr>
+  <tr><td>La vigilancia entomológica es manual: los conteos semanales de ovitrampas se capturan a mano</td><td>Conteo diario automático con validación en origen; se planea una operación en paralelo con el conteo manual para calibrar el sistema</td></tr>
+  <tr><td>La conectividad es intermitente en municipios rurales y los sensores pueden fallar</td><td>LoRaWAN/NB-IoT con búfer store-and-forward en el edge; cuarentena de lecturas y orden de mantenimiento automática para nodos sin datos &gt; 48 h</td></tr>
+</table>
+<h3>5.2 Barreras culturales</h3>
+<ul>
+  <li><b>Cultura reactiva:</b> hoy se fumiga cuando ya hay casos confirmados. El pronóstico frente al umbral epidémico muestra el costo de esperar.</li>
+  <li><b>Desconfianza en la «caja negra»:</b> cada colonia muestra qué variables explican su riesgo y con qué peso, y la auditoría de sesgos por tipo de zona es visible.</li>
+  <li><b>Silos</b> entre epidemiología, control vectorial y administración: comparten un solo tablero y documentos ERP con folio.</li>
+  <li><b>Personal de campo que teme ser evaluado</b> por los sensores: se co-diseña con ellos, se capacita y se empieza con un piloto en pocas colonias.</li>
+  <li><b>Riesgo reputacional en zonas turísticas y privacidad ciudadana:</b> la vista ciudadana muestra niveles agregados y los reportes guardan la ubicación con precisión de 100 m.</li>
+</ul>
+<h3>5.3 Valor conectado y ventaja competitiva</h3>
+<p>La arquitectura convierte un programa reactivo en un <b>servicio de vigilancia anticipada</b>. La red propia de ovitrampas genera un dato que otros no tienen, y la integración con el ERP lo convierte en acción y en costo trazable. El valor se mide con indicadores que el sistema ya calcula o registra:</p>
+<table>
+  <tr><th style="width:36%">Indicador</th><th>Cómo se mide en el prototipo</th></tr>
+  <tr><td>Anticipación del brote</td><td>Semanas entre la alerta por colonia y el cruce del umbral epidémico (pronóstico a 1–4 semanas)</td></tr>
+  <tr><td>Tiempo de alerta a orden de servicio</td><td>Marca de tiempo del riesgo frente al <code>created_at</code> del documento ERP (de días por oficio a minutos)</td></tr>
+  <tr><td>Costo por intervención focalizada</td><td><code>importe_total_mxn</code> de cada orden: insumos según nivel de riesgo, en lugar de fumigar toda la ciudad</td></tr>
+  <tr><td>Confiabilidad del dato</td><td>Nodos en línea, % de lecturas en cuarentena y eventos de seguridad</td></tr>
+</table>
+<p>Sobre esta base se pueden ofrecer servicios de mayor valor: <b>vigilancia como servicio</b> para otros municipios y estados, pronósticos por API para hospitales (planear camas) y para el sector turístico, y reportes automáticos a dirección. Todo eso reutiliza la misma API, el mismo modelo y el mismo conector.</p>
+
+<div class="note"><b>Cómo verificarlo.</b> Abrir el dashboard y la API (enlaces arriba). En «Operación e integración» se ven la telemetría entrando, la cuarentena, los documentos ERP con su acuse y los eventos de seguridad. Para correrlo en local: <code>uvicorn app.main:app</code> en <code>backend/</code> y <code>npm run dev</code> en <code>frontend/</code>. Pruebas: <code>python -m pytest -q</code> (11 pruebas). El README del repositorio tiene las instrucciones de despliegue en Render y Vercel.</div>
+
+</div>
+<script>
+  document.querySelectorAll('[data-k]').forEach(e => { e.textContent = DATOS[e.dataset.k] || ''; });
+  document.querySelectorAll('[data-href]').forEach(a => {
+    const url = DATOS[a.dataset.href] + (a.dataset.suffix || '');
+    a.href = url; a.textContent = url.replace(/^https?:\/\//, '');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 728" width="1050" height="728" font-family="Inter, 'IBM Plex Sans', 'DejaVu Sans', Arial, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1F3A3D"/>
+    </marker>
+    <style>
+      .t { font-size: 12.5px; font-weight: 700; fill: #17211F; text-anchor: middle; }
+      .s { font-size: 10.5px; fill: #44565A; text-anchor: middle; }
+      .box { fill: #FFFFFF; stroke: #5F7176; stroke-width: 1.2; }
+      .ln { stroke: #1F3A3D; stroke-width: 1.7; fill: none; marker-end: url(#ar); }
+      .tab { font-size: 10.5px; font-weight: 700; fill: #FFFFFF; text-anchor: middle; letter-spacing: 0.4px; }
+      .fw { fill: #B3261E; }
+      .fwt { font-size: 10px; font-weight: 700; fill: #FFFFFF; text-anchor: middle; letter-spacing: 0.3px; }
+      .pill { fill: #FFFFFF; stroke: #B3261E; stroke-width: 1.2; }
+      .pt { font-size: 9.5px; font-weight: 700; fill: #7A1A14; text-anchor: middle; }
+      .bd { fill: #0F5C6E; stroke: #FFFFFF; stroke-width: 1.5; }
+      .bt { font-size: 9.5px; font-weight: 700; fill: #FFFFFF; text-anchor: middle; }
+      .lab { font-size: 10px; fill: #1F3A3D; font-weight: 600; }
+    </style>
+  </defs>
+
+  <rect width="1050" height="728" fill="#FFFFFF"/>
+
+  <!-- Título -->
+  <text x="20" y="27" font-size="17" font-weight="700" fill="#17211F">Sentinela Aedes · Segmentación IT/OT con IDMZ bajo Zero Trust</text>
+  <text x="20" y="47" font-size="11.5" fill="#44565A">Modelo Purdue / ISA/IEC 62443 · deny-all por defecto entre zonas: solo se permiten los flujos numerados (puerto en blanco sobre cada firewall)</text>
+
+  <!-- ===================== ZONAS ===================== -->
+  <!-- IT niveles 4-5 -->
+  <rect x="20" y="62" width="684" height="138" fill="#EAF1FB" stroke="#9DB7DA"/>
+  <rect x="20" y="62" width="22" height="138" fill="#2F5D9A"/>
+  <text class="tab" transform="translate(35 131) rotate(-90)">IT · NIVELES 4–5</text>
+  <!-- FW-2 -->
+  <rect class="fw" x="20" y="208" width="684" height="18"/>
+  <text class="fwt" x="310" y="221">FW-2 · IT ↔ IDMZ · deny-all</text>
+  <!-- IDMZ nivel 3.5 -->
+  <rect x="20" y="234" width="684" height="192" fill="#FFF4E0" stroke="#E2B866"/>
+  <rect x="20" y="234" width="22" height="192" fill="#A86B00"/>
+  <text class="tab" transform="translate(35 330) rotate(-90)">IDMZ · NIVEL 3.5</text>
+  <!-- FW-3 -->
+  <rect class="fw" x="20" y="434" width="684" height="18"/>
+  <text class="fwt" x="436" y="447">FW-3 · IDMZ ↔ OT · sin IT ↔ OT directo</text>
+  <!-- OT nivel 3 -->
+  <rect x="20" y="460" width="684" height="110" fill="#E7F4EE" stroke="#93C4AA"/>
+  <rect x="20" y="460" width="22" height="110" fill="#2E7D57"/>
+  <text class="tab" transform="translate(35 515) rotate(-90)">OT · NIVEL 3</text>
+  <!-- OT niveles 0-2 -->
+  <rect x="20" y="578" width="684" height="122" fill="#F1F8F3" stroke="#93C4AA"/>
+  <rect x="20" y="578" width="22" height="122" fill="#4F8F6E"/>
+  <text class="tab" transform="translate(35 639) rotate(-90)">OT · NIVELES 0–2</text>
+  <!-- Nube / Internet -->
+  <rect x="770" y="62" width="260" height="638" fill="#F2F0FA" stroke="#B9B0DE"/>
+  <rect x="770" y="62" width="22" height="638" fill="#5B4BA6"/>
+  <text class="tab" transform="translate(785 575) rotate(-90)">INTERNET · NUBE PÚBLICA (PaaS)</text>
+  <!-- FW-1 -->
+  <rect class="fw" x="740" y="62" width="18" height="638"/>
+  <text class="fwt" transform="translate(753 175) rotate(-90)">solo salida 443 desde IDMZ</text>
+  <text class="fwt" transform="translate(753 565) rotate(-90)">FW-1 · PERÍMETRO / WAF</text>
+
+  <!-- ===================== CAJAS ===================== -->
+  <!-- IT -->
+  <rect class="box" x="50" y="92" width="200" height="94" rx="6"/>
+  <text class="t" x="150" y="117">Identidad (IdP) + MFA</text>
+  <text class="s" x="150" y="137">RBAC por rol: epidemiología,</text>
+  <text class="s" x="150" y="152">control vectorial y TI</text>
+  <text class="s" x="150" y="167">mínimo privilegio</text>
+
+  <rect class="box" x="275" y="92" width="215" height="94" rx="6"/>
+  <text class="t" x="382" y="117">SOC · SIEM</text>
+  <text class="s" x="382" y="137">correlación de eventos</text>
+  <text class="s" x="382" y="152">regla SA-001 → severidad alta</text>
+  <text class="s" x="382" y="167">playbook de respuesta</text>
+
+  <rect class="box" x="515" y="92" width="181" height="94" rx="6"/>
+  <text class="t" x="605" y="117">ERP institucional SSY</text>
+  <text class="s" x="605" y="137">órdenes, almacén, compras</text>
+  <text class="s" x="605" y="152">(simulado en el prototipo)</text>
+
+  <!-- IDMZ -->
+  <rect class="box" x="50" y="296" width="165" height="108" rx="6"/>
+  <text class="t" x="132" y="326">Bastión (jump host)</text>
+  <text class="s" x="132" y="346">acceso just-in-time</text>
+  <text class="s" x="132" y="361">MFA · sesión grabada</text>
+  <text class="s" x="132" y="376">único camino hacia OT</text>
+
+  <rect class="box" x="240" y="296" width="200" height="108" rx="6"/>
+  <text class="t" x="340" y="326">Repositorio de firmware</text>
+  <text class="s" x="340" y="346">imágenes firmadas (FUOTA)</text>
+  <text class="s" x="340" y="361">parches validados en QA</text>
+
+  <rect class="box" x="515" y="262" width="181" height="44" rx="6"/>
+  <text class="t" x="605" y="280">Gateway ERP (API)</text>
+  <text class="s" x="605" y="297">mTLS · allowlist de IPs</text>
+
+  <rect class="box" x="515" y="314" width="181" height="44" rx="6"/>
+  <text class="t" x="605" y="332">Colector de logs</text>
+  <text class="s" x="605" y="349">API, edge y firewalls</text>
+
+  <rect class="box" x="515" y="366" width="181" height="44" rx="6"/>
+  <text class="t" x="605" y="384">Relay de telemetría</text>
+  <text class="s" x="605" y="401">MQTT → HTTPS · búfer</text>
+
+  <!-- OT nivel 3 -->
+  <rect class="box" x="50" y="488" width="250" height="70" rx="6"/>
+  <text class="t" x="175" y="511">LoRaWAN Network Server</text>
+  <text class="s" x="175" y="529">llaves de sesión por nodo (OTAA)</text>
+  <text class="s" x="175" y="544">detecta nodos clonados</text>
+
+  <rect class="box" x="420" y="488" width="276" height="70" rx="6"/>
+  <text class="t" x="558" y="511">Servidor edge · Jurisdicción 1</text>
+  <text class="s" x="558" y="529">validación local · búfer 72 h</text>
+  <text class="s" x="558" y="544">identidad X.509 por gateway</text>
+
+  <!-- OT niveles 0-2 con microsegmento -->
+  <rect x="48" y="600" width="436" height="96" rx="8" fill="none" stroke="#2E7D57" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <text x="266" y="691" font-size="9.5" font-style="italic" fill="#2E7D57" text-anchor="middle">microsegmento por sitio (VLAN 41, 42, …) · sin IP pública</text>
+  <rect class="box" x="56" y="610" width="170" height="66" rx="6"/>
+  <text class="t" x="141" y="632">Gateways LoRaWAN</text>
+  <text class="s" x="141" y="650">1 VLAN por sitio</text>
+  <text class="s" x="141" y="665">arranque seguro</text>
+
+  <rect class="box" x="300" y="610" width="178" height="66" rx="6"/>
+  <text class="t" x="389" y="632">Ovitrampas IoT ×400</text>
+  <text class="s" x="389" y="650">huevecillos, T°, HR,</text>
+  <text class="s" x="389" y="665">batería, RSSI</text>
+
+  <rect class="box" x="520" y="610" width="176" height="66" rx="6"/>
+  <text class="t" x="608" y="632">Ovitrampas NB-IoT</text>
+  <text class="s" x="608" y="650">APN privado del operador</text>
+  <text class="s" x="608" y="665">sin salida a Internet</text>
+
+  <!-- Nube / Internet -->
+  <rect class="box" x="805" y="92" width="195" height="48" rx="6"/>
+  <text class="t" x="902" y="112">Usuarios remotos</text>
+  <text class="s" x="902" y="129">celular · laptop · tablet</text>
+
+  <rect class="box" x="805" y="168" width="195" height="50" rx="6"/>
+  <text class="t" x="902" y="189">Vercel · Dashboard</text>
+  <text class="s" x="902" y="206">React estático vía CDN</text>
+
+  <rect class="box" x="805" y="262" width="195" height="150" rx="6" stroke="#5B4BA6" stroke-width="1.6"/>
+  <text class="t" x="902" y="285">Render · API FastAPI</text>
+  <text class="s" x="902" y="305">ingesta y validación</text>
+  <text class="s" x="902" y="321">cuarentena de lecturas</text>
+  <text class="s" x="902" y="337">conector ERP (simulado)</text>
+  <text class="s" x="902" y="353">eventos para SIEM</text>
+  <text class="s" x="902" y="373">X-Device-Key · TLS 1.2+</text>
+  <text class="s" x="902" y="389">CORS restringido</text>
+
+  <rect class="box" x="805" y="446" width="195" height="60" rx="6"/>
+  <text class="t" x="902" y="469">PostgreSQL gestionada</text>
+  <text class="s" x="902" y="487">red privada · sin IP pública</text>
+  <text class="s" x="902" y="501">cifrado en reposo y respaldo</text>
+
+  <rect class="box" x="805" y="610" width="195" height="60" rx="6"/>
+  <text class="t" x="902" y="633">APIs públicas</text>
+  <text class="s" x="902" y="651">Open-Meteo (clima)</text>
+  <text class="s" x="902" y="665">DGE (casos de dengue)</text>
+
+  <!-- ===================== FLUJOS ===================== -->
+  <!-- 1 Ovitrampa → Gateway -->
+  <line class="ln" x1="300" y1="643" x2="228" y2="643"/>
+  <circle class="bd" cx="263" cy="628" r="8.5"/><text class="bt" x="263" y="631.5">1</text>
+  <text class="lab" x="263" y="659" text-anchor="middle" font-size="9.5">LoRa 915 MHz</text>
+  <text class="lab" x="263" y="670" text-anchor="middle" font-size="9.5">AES-128</text>
+  <!-- 2 Gateway → LNS -->
+  <line class="ln" x1="137" y1="610" x2="137" y2="560"/>
+  <circle class="bd" cx="137" cy="587" r="8.5"/><text class="bt" x="137" y="590.5">2</text>
+  <text class="lab" x="151" y="591">WSS/TLS 443</text>
+  <!-- 3 NB-IoT → Edge -->
+  <line class="ln" x1="610" y1="610" x2="610" y2="560"/>
+  <circle class="bd" cx="610" cy="587" r="8.5"/><text class="bt" x="610" y="590.5">3</text>
+  <text class="lab" x="624" y="591">CoAP/DTLS 5684</text>
+  <!-- 4 LNS → Edge -->
+  <line class="ln" x1="300" y1="523" x2="418" y2="523"/>
+  <circle class="bd" cx="358" cy="523" r="8.5"/><text class="bt" x="358" y="526.5">4</text>
+  <text class="lab" x="358" y="545" text-anchor="middle">MQTT/TLS 8883</text>
+  <!-- 5 Edge → Relay (iniciado desde OT) -->
+  <line class="ln" x1="600" y1="488" x2="600" y2="412"/>
+  <rect class="pill" x="553" y="435" width="94" height="16" rx="8"/><text class="pt" x="600" y="446.5">MQTT/TLS 8883</text>
+  <circle class="bd" cx="600" cy="472" r="8.5"/><text class="bt" x="600" y="475.5">5</text>
+  <!-- 6 Relay → API -->
+  <line class="ln" x1="696" y1="388" x2="803" y2="388"/>
+  <rect class="pill" x="715" y="380" width="68" height="16" rx="8"/><text class="pt" x="749" y="391.5">HTTPS 443</text>
+  <circle class="bd" cx="781" cy="371" r="8.5"/><text class="bt" x="781" y="374.5">6</text>
+  <!-- 7 API → PostgreSQL -->
+  <line class="ln" x1="902" y1="412" x2="902" y2="444"/>
+  <circle class="bd" cx="885" cy="428" r="8.5"/><text class="bt" x="885" y="431.5">7</text>
+  <text class="lab" x="912" y="432">TLS 5432</text>
+  <!-- 8 Usuarios → Vercel → API -->
+  <line class="ln" x1="902" y1="140" x2="902" y2="166"/>
+  <text class="lab" x="912" y="157">HTTPS 443</text>
+  <line class="ln" x1="902" y1="218" x2="902" y2="260"/>
+  <circle class="bd" cx="885" cy="240" r="8.5"/><text class="bt" x="885" y="243.5">8</text>
+  <text class="lab" x="912" y="244">GET /api/* · CORS</text>
+  <!-- 9 API → Gateway ERP → ERP -->
+  <line class="ln" x1="804" y1="284" x2="698" y2="284"/>
+  <rect class="pill" x="713" y="276" width="72" height="16" rx="8"/><text class="pt" x="749" y="287.5">443 · mTLS</text>
+  <circle class="bd" cx="781" cy="267" r="8.5"/><text class="bt" x="781" y="270.5">9</text>
+  <line class="ln" x1="600" y1="262" x2="600" y2="188"/>
+  <rect class="pill" x="564" y="209" width="72" height="16" rx="8"/><text class="pt" x="600" y="220.5">443 · mTLS</text>
+  <circle class="bd" cx="600" cy="246" r="8.5"/><text class="bt" x="600" y="249.5">9</text>
+  <!-- 10 Logs → Colector → SIEM -->
+  <line class="ln" x1="804" y1="336" x2="698" y2="336"/>
+  <rect class="pill" x="713" y="328" width="72" height="16" rx="8"/><text class="pt" x="749" y="339.5">syslog 6514</text>
+  <circle class="bd" cx="781" cy="319" r="8.5"/><text class="bt" x="781" y="322.5" font-size="8.5">10</text>
+  <path class="ln" d="M515 336 H470 V188"/>
+  <rect class="pill" x="421" y="209" width="98" height="16" rx="8"/><text class="pt" x="470" y="220.5">syslog/TLS 6514</text>
+  <circle class="bd" cx="470" cy="290" r="8.5"/><text class="bt" x="470" y="293.5" font-size="8.5">10</text>
+  <!-- 11 Técnico (IdP+MFA) → Bastión → LNS/Edge -->
+  <line class="ln" x1="150" y1="186" x2="150" y2="294"/>
+  <rect class="pill" x="100" y="209" width="100" height="16" rx="8"/><text class="pt" x="150" y="220.5">ZTNA 443 + MFA</text>
+  <circle class="bd" cx="150" cy="262" r="8.5"/><text class="bt" x="150" y="265.5" font-size="8.5">11</text>
+  <line class="ln" x1="150" y1="404" x2="150" y2="486"/>
+  <rect class="pill" x="124" y="435" width="52" height="16" rx="8"/><text class="pt" x="150" y="446.5">SSH 22</text>
+  <circle class="bd" cx="150" cy="472" r="8.5"/><text class="bt" x="150" y="475.5" font-size="8.5">11</text>
+  <!-- 12 Repositorio firmware → LNS -->
+  <line class="ln" x1="270" y1="404" x2="270" y2="486"/>
+  <rect class="pill" x="236" y="435" width="68" height="16" rx="8"/><text class="pt" x="270" y="446.5">HTTPS 443</text>
+  <circle class="bd" cx="270" cy="472" r="8.5"/><text class="bt" x="270" y="475.5" font-size="8.5">12</text>
+  <!-- 13 API → APIs públicas (salida) -->
+  <path class="ln" d="M1000 400 H1018 V640 H1002"/>
+  <circle class="bd" cx="1018" cy="560" r="8.5"/><text class="bt" x="1018" y="563.5" font-size="8.5">13</text>
+  <text class="lab" x="1004" y="590" text-anchor="end">HTTPS 443 (salida)</text>
+
+  <text x="20" y="719" font-size="10" fill="#44565A">Cualquier flujo no numerado se bloquea y se registra en el SIEM. Tabla completa de flujos y controles: docs/seguridad/README.md · Reporte técnico, sección 3.</text>
+</svg>

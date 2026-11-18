@@ -16,6 +16,17 @@ Dashboard (Vercel) ◀── GET /api/dashboard, /api/ops ────┤
    └────────────── POST ──────────────▶ conector ERP simulado (print + bitácora + acuse)
 ```
 
+## Entregables del segundo parcial
+
+| Entregable | Archivo |
+|---|---|
+| Reporte técnico (PDF, 5 págs.) | [`docs/Reporte_Tecnico_Sentinela_Aedes.pdf`](docs/Reporte_Tecnico_Sentinela_Aedes.pdf) · fuente: [`docs/reporte/reporte_tecnico.html`](docs/reporte/reporte_tecnico.html) |
+| Diagrama IDMZ / Zero Trust | [`docs/seguridad/idmz_zero_trust.png`](docs/seguridad/idmz_zero_trust.png) (editable en `.svg`) · flujos y controles en [`docs/seguridad/README.md`](docs/seguridad/README.md) |
+| Regla SIEM SA-001 (formato Sigma) | [`docs/seguridad/SA-001.sigma.yml`](docs/seguridad/SA-001.sigma.yml) · implementada en `backend/app/telemetry.py` |
+| Guion de la demo (6 min) y preguntas | [`docs/guion_exposicion.md`](docs/guion_exposicion.md) |
+
+Para regenerar el PDF después de cambiar los enlaces o los integrantes (bloque `DATOS` al inicio de `reporte_tecnico.html`): `node docs/reporte/generar_pdf.js`, o abrir el HTML en Chrome → Imprimir → Guardar como PDF (tamaño Carta, con gráficos de fondo).
+
 ## Qué datos son reales y cuáles simulados
 
 | Dato | Fuente | Estado |

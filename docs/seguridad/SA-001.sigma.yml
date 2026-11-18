@@ -1,0 +1,85 @@
+# =============================================================================
+# Regla SIEM SA-001 · Fuerza bruta contra la API de telemetría IoT
+# Formato Sigma 2.0 (regla base + regla de correlación). Convertible a
+# Splunk SPL, Elastic EQL/KQL o Wazuh con sigma-cli (pySigma).
+#
+# Implementación en el prototipo: backend/app/telemetry.py → register_auth_failure()
+# Prueba en vivo:  python backend/scripts/node_simulator.py --url <API> --ataque
+# Evidencia:       GET /api/security/events  ·  pestaña "Operación e integración"
+# =============================================================================
+
+# --- 1) Evento base: intento con llave de dispositivo inválida ---------------
+title: Llave de dispositivo inválida en la API de Sentinela Aedes
+id: f7707cb9-23e3-47c1-8ad8-4361caa1f45b
+name: sa_auth_fail_dispositivo
+status: experimental
+description: >
+  Un cliente intentó publicar telemetría (o usar un endpoint protegido) con un
+  encabezado X-Device-Key ausente o inválido. La API responde 401 y registra el
+  evento en la tabla security_events (kind = auth_fail).
+author: Equipo Sentinela Aedes
+date: 2026-11-18
+references:
+  - https://github.com/Pancholot/Sentinela-aedes/blob/main/backend/app/telemetry.py
+logsource:
+  product: sentinela_aedes          # log de aplicación (FastAPI en Render)
+  service: api_security_events      # tabla security_events / stdout de uvicorn
+  definition: >
+    Campos: ts (UTC), kind, severity, source_ip (primer valor de
+    X-Forwarded-For o IP del socket), detail (incluye la ruta).
+detection:
+  selection:
+    kind: auth_fail
+    detail|contains: 'Llave de dispositivo inválida'
+  condition: selection
+fields:
+  - ts
+  - source_ip
+  - detail
+falsepositives:
+  - Gateway legítimo con la llave anterior después de una rotación de DEVICE_API_KEY.
+level: medium
+tags:
+  - attack.credential-access
+  - attack.t1110
+---
+# --- 2) Correlación: 5 o más fallos desde la misma IP en 60 s ---------------
+title: SA-001 Posible fuerza bruta contra la API de telemetría IoT
+id: d3c5eb46-84fb-42b7-95a2-92eed2cfb5b2
+status: experimental
+description: >
+  Detecta adivinación de la llave de dispositivo (MITRE ATT&CK T1110) contra
+  POST /api/telemetry. Un atacante que obtenga la llave podría inyectar
+  conteos falsos de huevecillos (spoofing de telemetría, ATT&CK for ICS T0856)
+  y provocar alertas de brote falsas u ocultar uno real.
+author: Equipo Sentinela Aedes
+date: 2026-11-18
+correlation:
+  type: event_count
+  rules:
+    - sa_auth_fail_dispositivo
+  group-by:
+    - source_ip
+  timespan: 60s
+  condition:
+    gte: 5
+level: high
+falsepositives:
+  - Gateway mal configurado que reintenta en ciclo (se confirma con el inventario de IPs de gateways).
+tags:
+  - attack.credential-access
+  - attack.t1110
+  - attack.ics.t0856
+# -----------------------------------------------------------------------------
+# Respuesta (playbook SOC) — Sigma no define acciones; se documentan aquí:
+#   Automática (implementada en el prototipo):
+#     1. Se registra un evento kind=brute_force, severity=alta en security_events
+#        (máximo uno por IP cada 60 s para no saturar al analista).
+#     2. Se emite WARNING "[SIEM] Posible fuerza bruta..." en el log del servicio.
+#     3. El evento aparece en el tablero (Operación e integración → Eventos de seguridad).
+#   Manual (analista SOC, SLA 15 min para severidad alta):
+#     4. Si la IP no pertenece al inventario de gateways → bloquearla 30 min en el WAF / firewall perimetral.
+#     5. Si es un gateway propio → rotar DEVICE_API_KEY y revisar el gateway por compromiso.
+#     6. Revisar quarantined_readings de la misma ventana por posibles lecturas inyectadas.
+#     7. Abrir incidente y documentar en la bitácora del SOC.
+# -----------------------------------------------------------------------------
