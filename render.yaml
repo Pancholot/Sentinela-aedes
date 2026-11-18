@@ -21,9 +21,9 @@ services:
       # Llave que deben presentar los nodos/gateways (X-Device-Key). Render la genera.
       - key: DEVICE_API_KEY
         generateValue: true
-      # Cambiar por la URL de Vercel (ej. https://sentinela-aedes.vercel.app) para cerrar CORS.
+      # Solo el dashboard desplegado puede consumir la API desde el navegador.
       - key: CORS_ORIGINS
-        value: "*"
+        value: "https://sentinela-aedes.vercel.app"
       - key: SIMULATOR_ENABLED
         value: "true"
       - key: SIMULATOR_INTERVAL
@@ -40,3 +40,5 @@ databases:
     region: ohio
     databaseName: sentinela
     user: sentinela
+    # Sin acceso desde internet: solo la API por la red privada de Render.
+    ipAllowList: []

@@ -85,6 +85,16 @@ def test_brute_force_rule(client):
     assert "brute_force" in kinds
 
 
+def test_siem_ignores_spoofed_forwarded_for(client):
+    # Un atacante cambia la IP falsa en cada intento; el proxy agrega la IP real al final.
+    for i in range(6):
+        client.post("/api/telemetry", json={"node_id": "OVI-0001"},
+                    headers={"X-Device-Key": "mala", "X-Forwarded-For": f"10.0.0.{i}, 203.0.113.7"})
+    events = client.get("/api/security/events?limit=20").json()
+    assert {e["source_ip"] for e in events if e["kind"] == "auth_fail"} >= {"203.0.113.7"}
+    assert any(e["kind"] == "brute_force" and e["source_ip"] == "203.0.113.7" for e in events)
+
+
 def test_brigada_sends_erp_order(client):
     r = client.post("/api/brigadas", json={"area_id": "col:mulsay", "horizon": 1}).json()
     assert r["created"] is True

@@ -34,8 +34,17 @@ def require_ready():
 
 
 def client_ip(request: Request) -> str:
+    """IP del cliente para la regla SIEM.
+
+    Se usa el ÚLTIMO valor de X-Forwarded-For: lo agrega el proxy de Render con la IP
+    que realmente se conectó. Los valores anteriores los puede escribir el propio
+    cliente, así que un atacante podría falsificarlos para evadir el umbral por IP."""
     fwd = request.headers.get("x-forwarded-for")
-    return fwd.split(",")[0].strip() if fwd else (request.client.host if request.client else "desconocida")
+    if fwd:
+        last = [p.strip() for p in fwd.split(",") if p.strip()]
+        if last:
+            return last[-1]
+    return request.client.host if request.client else "desconocida"
 
 
 # ------------------------------------------------------------------ estado
