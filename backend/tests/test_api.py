@@ -86,20 +86,17 @@ def test_brute_force_rule(client):
 
 
 def test_siem_ignores_spoofed_forwarded_for(client):
-    # El atacante cambia la IP falsa en cada intento; el borde agrega la IP real y luego
-    # los proxies internos agregan IPs privadas (forma real observada en Render).
+    # Forma real observada en Render: <falsa del cliente>, <IP real>, <Cloudflare>, <red interna>.
+    # El atacante cambia la IP falsa en cada intento para evadir el umbral por IP.
     for i in range(6):
         client.post("/api/telemetry", json={"node_id": "OVI-0001"},
-                    headers={"X-Device-Key": "mala", "X-Forwarded-For": f"1.2.3.{i}, 8.8.4.4, 10.29.49.105"})
+                    headers={"X-Device-Key": "mala",
+                             "X-Forwarded-For": f"1.2.3.{i}, 8.8.4.4, 172.64.203.116, 10.29.49.105"})
     events = client.get("/api/security/events?limit=20").json()
     fails = {e["source_ip"] for e in events if e["kind"] == "auth_fail"}
-    assert "8.8.4.4" in fails and not any(ip.startswith("1.2.3.") or ip.startswith("10.") for ip in fails)
+    assert "8.8.4.4" in fails
+    assert not any(ip.startswith(("1.2.3.", "10.", "172.64.")) for ip in fails)
     assert any(e["kind"] == "brute_force" and e["source_ip"] == "8.8.4.4" for e in events)
-    # Detrás de Cloudflare manda CF-Connecting-IP (lo escribe Cloudflare, no el cliente).
-    client.post("/api/telemetry", json={"node_id": "OVI-0001"},
-                headers={"X-Device-Key": "mala", "CF-Connecting-IP": "9.9.9.9",
-                         "X-Forwarded-For": "1.2.3.4, 9.9.9.9, 172.64.203.116, 10.29.49.105"})
-    assert client.get("/api/security/events?limit=1").json()[0]["source_ip"] == "9.9.9.9"
 
 
 def test_brigada_sends_erp_order(client):

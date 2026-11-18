@@ -34,30 +34,39 @@ def require_ready():
         raise HTTPException(status_code=503, detail="El servidor está inicializando la base de datos; reintenta en unos segundos.")
 
 
+# Rangos publicados por Cloudflare (https://www.cloudflare.com/ips/). Render pasa el
+# tráfico por Cloudflare, así que estas IPs son proxies de confianza, no clientes.
+_CLOUDFLARE = [ipaddress.ip_network(n) for n in (
+    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18",
+    "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20", "197.234.240.0/22", "198.41.128.0/17",
+    "162.158.0.0/15", "104.16.0.0/13", "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22",
+    "2400:cb00::/32", "2606:4700::/32", "2803:f800::/32", "2405:b500::/32", "2405:8100::/32",
+    "2a06:98c0::/29", "2c0f:f248::/32",
+)]
+
+
+def _trusted_proxy(ip: ipaddress._BaseAddress) -> bool:
+    return not ip.is_global or any(ip in net for net in _CLOUDFLARE)
+
+
 def client_ip(request: Request) -> str:
     """IP del cliente para la regla SIEM.
 
-    Render está detrás de Cloudflare. Cloudflare escribe CF-Connecting-IP con la IP que
-    realmente se conectó y sobrescribe cualquier valor que mande el cliente, así que no se
-    puede falsificar. X-Forwarded-For, en cambio, conserva lo que escribió el cliente (un
-    atacante podría cambiarlo en cada intento para evadir el umbral por IP) y termina con
-    IPs de Cloudflare y de la red interna de Render. Solo si no existe CF-Connecting-IP
-    (por ejemplo, en local) se usa la IP pública más a la derecha de X-Forwarded-For."""
-    cf = (request.headers.get("cf-connecting-ip") or "").strip()
-    if cf:
-        try:
-            ipaddress.ip_address(cf)
-            return cf
-        except ValueError:
-            pass
+    En Render, X-Forwarded-For llega como
+        "<lo que escribió el cliente>, <IP real>, <Cloudflare>, <red interna de Render>".
+    Cada proxy agrega al final la IP que se le conectó, así que se lee de derecha a
+    izquierda saltando los proxies de confianza (IPs privadas y de Cloudflare): la primera
+    que queda es la IP real. Los valores de la izquierda los puede inventar un atacante para
+    evadir el umbral por IP, por eso nunca se usan."""
     fwd = request.headers.get("x-forwarded-for")
     if fwd:
         for part in reversed([p.strip() for p in fwd.split(",") if p.strip()]):
             try:
-                if ipaddress.ip_address(part).is_global:
-                    return part
+                ip = ipaddress.ip_address(part)
             except ValueError:
-                continue
+                break  # valor inválido: lo que sigue a la izquierda no es confiable
+            if not _trusted_proxy(ip):
+                return part
     return request.client.host if request.client else "desconocida"
 
 
