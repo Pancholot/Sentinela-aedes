@@ -95,6 +95,11 @@ def test_siem_ignores_spoofed_forwarded_for(client):
     fails = {e["source_ip"] for e in events if e["kind"] == "auth_fail"}
     assert "8.8.4.4" in fails and not any(ip.startswith("1.2.3.") or ip.startswith("10.") for ip in fails)
     assert any(e["kind"] == "brute_force" and e["source_ip"] == "8.8.4.4" for e in events)
+    # Detrás de Cloudflare manda CF-Connecting-IP (lo escribe Cloudflare, no el cliente).
+    client.post("/api/telemetry", json={"node_id": "OVI-0001"},
+                headers={"X-Device-Key": "mala", "CF-Connecting-IP": "9.9.9.9",
+                         "X-Forwarded-For": "1.2.3.4, 9.9.9.9, 172.64.203.116, 10.29.49.105"})
+    assert client.get("/api/security/events?limit=1").json()[0]["source_ip"] == "9.9.9.9"
 
 
 def test_brigada_sends_erp_order(client):

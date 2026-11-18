@@ -37,10 +37,19 @@ def require_ready():
 def client_ip(request: Request) -> str:
     """IP del cliente para la regla SIEM.
 
-    X-Forwarded-For llega como "<lo que mandó el cliente>, <IP real>, <proxies internos>".
-    Los primeros valores los puede falsificar un atacante para evadir el umbral por IP,
-    y los últimos son IPs privadas de la red de Render. Por eso se toma la IP pública
-    más a la derecha: la que agregó el borde de Render con quien realmente se conectó."""
+    Render está detrás de Cloudflare. Cloudflare escribe CF-Connecting-IP con la IP que
+    realmente se conectó y sobrescribe cualquier valor que mande el cliente, así que no se
+    puede falsificar. X-Forwarded-For, en cambio, conserva lo que escribió el cliente (un
+    atacante podría cambiarlo en cada intento para evadir el umbral por IP) y termina con
+    IPs de Cloudflare y de la red interna de Render. Solo si no existe CF-Connecting-IP
+    (por ejemplo, en local) se usa la IP pública más a la derecha de X-Forwarded-For."""
+    cf = (request.headers.get("cf-connecting-ip") or "").strip()
+    if cf:
+        try:
+            ipaddress.ip_address(cf)
+            return cf
+        except ValueError:
+            pass
     fwd = request.headers.get("x-forwarded-for")
     if fwd:
         for part in reversed([p.strip() for p in fwd.split(",") if p.strip()]):
